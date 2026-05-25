@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PromptDealer — The library of prompts that actually work.</title>
+<meta name="description" content="A curated library of ready-to-use AI prompts across writing, coding, business, design, marketing, and more. Browse, copy, ship." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #fafaf7;
+    --bg-elev: #ffffff;
+    --ink: #0a0a0a;
+    --ink-2: #1a1a1a;
+    --muted: #6b6b66;
+    --muted-2: #9a9a92;
+    --line: #e8e6df;
+    --line-2: #d6d3c8;
+    --accent: #e85d2f;   /* warm clay */
+    --accent-2: #1a3a2e; /* deep forest */
+    --chip: #f1efe8;
+    --shadow-sm: 0 1px 2px rgba(10,10,10,.04), 0 2px 6px rgba(10,10,10,.04);
+    --shadow-md: 0 4px 12px rgba(10,10,10,.06), 0 12px 32px rgba(10,10,10,.06);
+    --radius: 14px;
+    --radius-sm: 10px;
+
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss01','cv11';
+  }
+  ::selection{background:var(--accent); color:#fff}
+
+  a{color:inherit; text-decoration:none}
+  button{font:inherit; cursor:pointer; border:none; background:none; color:inherit}
+
+  .container{max-width: 1240px; margin: 0 auto; padding: 0 28px}
+
+  /* NAV */
+  nav{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(250,250,247,.82);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height: 64px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+  }
+  .brand-mark{
+    width:28px; height:28px; border-radius: 7px;
+    background: var(--ink);
+    color: var(--bg);
+    display:grid; place-items:center;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 15px;
+    font-style: italic;
+  }
+  .brand em{font-style: italic; color: var(--accent); font-weight: 500}
+  .nav-links{display:flex; gap:28px; align-items:center}
+  .nav-links a{
+    font-size: 14px; color: var(--muted);
+    transition: color .2s;
+  }
+  .nav-links a:hover{color: var(--ink)}
+  .nav-cta{
+    padding: 9px 16px;
+    border-radius: 100px;
+    background: var(--ink);
+    color: var(--bg) !important;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform .2s, background .2s;
+  }
+  .nav-cta:hover{background: var(--accent); transform: translateY(-1px)}
+
+  @media (max-width: 720px){
+    .nav-links a:not(.nav-cta){display:none}
+  }
+
+  /* HERO */
+  .hero{
+    padding: 88px 0 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 900px){
+    .hero{padding: 56px 0 48px}
+    .hero-grid{grid-template-columns: 1fr; gap: 40px}
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 24px;
+  }
+  .eyebrow::before{
+    content: ''; width: 24px; height: 1px; background: var(--ink);
+  }
+
+  h1.hero-title{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, 6.4vw, 84px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  h1.hero-title em{
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+  }
+  .hero-sub{
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--muted);
+    max-width: 540px;
+    margin-bottom: 36px;
+    line-height: 1.55;
+  }
+  .hero-cta-row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 14px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: transform .2s, background .2s;
+  }
+  .btn-primary:hover{background: var(--accent); transform: translateY(-1px)}
+  .btn-ghost{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 14px 22px;
+    color: var(--ink);
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid var(--line-2);
+    transition: border-color .2s, background .2s;
+  }
+  .btn-ghost:hover{border-color: var(--ink); background: rgba(0,0,0,.03)}
+
+  .hero-stats{
+    display:flex; gap: 36px;
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .stat-num{
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat-lbl{
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+  }
+
+  /* Hero card preview */
+  .hero-preview{
+    position: relative;
+    height: 460px;
+  }
+  .preview-card{
+    position: absolute;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-md);
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .preview-card.c1{
+    top: 0; left: 0; width: 78%;
+    transform: rotate(-2deg);
+    z-index: 3;
+  }
+  .preview-card.c2{
+    top: 130px; right: 0; width: 75%;
+    transform: rotate(2deg);
+    z-index: 2;
+  }
+  .preview-card.c3{
+    bottom: 0; left: 15%; width: 80%;
+    transform: rotate(-1deg);
+    z-index: 1;
+  }
+  .preview-card:hover{transform: rotate(0deg) translateY(-4px); z-index: 4}
+  .pv-cat{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .pv-title{
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .pv-snippet{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px){
+    .hero-preview{height: 360px; display:none}
+  }
+
+  /* DECORATIVE LINE */
+  .marquee{
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-elev);
+    overflow: hidden;
+    padding: 18px 0;
+  }
+  .marquee-track{
+    display:flex; gap: 56px;
+    animation: scroll 40s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .marquee-item{
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--muted);
+  }
+  .marquee-item::after{
+    content: '✦';
+    margin-left: 56px;
+    color: var(--line-2);
+    font-style: normal;
+  }
+  @keyframes scroll{
+    from{transform: translateX(0)}
+    to{transform: translateX(-50%)}
+  }
+
+  /* LIBRARY */
+  .library{padding: 88px 0 40px}
+  .section-head{margin-bottom: 40px; max-width: 720px}
+  .section-head h2{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 54px);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .section-head h2 em{font-style:italic; color: var(--accent); font-weight: 300}
+  .section-head p{color: var(--muted); font-size: 17px; max-width: 580px}
+
+  /* Search */
+  .toolbar{
+    display:flex; gap:14px; align-items:center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .search-wrap{
+    flex: 1;
+    min-width: 280px;
+    position: relative;
+  }
+  .search-wrap svg{
+    position: absolute; left: 18px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+  }
+  .search{
+    width: 100%;
+    padding: 14px 18px 14px 48px;
+    border: 1px solid var(--line-2);
+    border-radius: 100px;
+    background: var(--bg-elev);
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search:focus{
+    border-color: var(--ink);
+    box-shadow: 0 0 0 4px rgba(0,0,0,.04);
+  }
+  .results-info{
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* Category filter */
+  .cat-filter{
+    display:flex; gap:8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-bottom: 36px;
+    scrollbar-width: none;
+  }
+  .cat-filter::-webkit-scrollbar{display:none}
+  .cat-pill{
+    padding: 9px 16px;
+    border: 1px solid var(--line-2);
+    background: var(--bg-elev);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .cat-pill:hover{color: var(--ink); border-color: var(--ink)}
+  .cat-pill.active{
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* Category sections */
+  .category-block{margin-bottom: 64px; scroll-margin-top: 80px}
+  .category-block.hidden{display:none}
+  .category-header{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .category-title{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    display:flex; align-items:center; gap:14px;
+  }
+  .category-title .num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .category-desc{
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 380px;
+    text-align: right;
+  }
+  @media (max-width: 640px){
+    .category-header{flex-direction: column; align-items:flex-start; gap:8px}
+    .category-desc{text-align:left}
+  }
+
+  .prompt-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .prompt-card{
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.2,.8,.2,1);
+    display:flex; flex-direction:column;
+    position: relative;
+    overflow: hidden;
+  }
+  .prompt-card::after{
+    content:'';
+    position:absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 70%, var(--accent) 200%);
+    opacity: 0;
+    transition: opacity .3s;
+    pointer-events: none;
+  }
+  .prompt-card:hover{
+    transform: translateY(-3px);
+    border-color: var(--ink-2);
+    box-shadow: var(--shadow-md);
+  }
+  .prompt-card:hover::after{opacity: 0.04}
+  .pc-sub{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .pc-title{
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .pc-desc{
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pc-foot{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .pc-tag{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .pc-arrow{
+    font-size: 16px;
+    color: var(--muted);
+    transition: transform .25s, color .25s;
+  }
+  .prompt-card:hover .pc-arrow{
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  /* MODAL */
+  .modal-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(10,10,10,.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .modal-backdrop.open{display:flex; opacity: 1}
+  .modal{
+    background: var(--bg-elev);
+    border-radius: 18px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 88vh;
+    overflow: hidden;
+    display:flex; flex-direction:column;
+    box-shadow: 0 20px 80px rgba(0,0,0,.3);
+    transform: translateY(20px) scale(.98);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .modal-backdrop.open .modal{transform: translateY(0) scale(1)}
+  .modal-head{
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-cat{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .modal-title{
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .modal-desc{
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .modal-body{
+    padding: 24px 32px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .modal-label{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .prompt-text{
+    background: var(--chip);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--ink-2);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .modal-foot{
+    padding: 18px 32px;
+    border-top: 1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .copy-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 11px 20px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background .2s, transform .2s;
+  }
+  .copy-btn:hover{background: var(--accent); transform: translateY(-1px)}
+  .copy-btn.copied{background: var(--accent-2)}
+  .close-btn{
+    width: 38px; height: 38px;
+    border-radius: 100px;
+    background: var(--chip);
+    display:grid; place-items:center;
+    font-size: 18px;
+    color: var(--ink);
+    transition: background .2s, transform .2s;
+    position: absolute;
+    top: 22px; right: 22px;
+  }
+  .close-btn:hover{background: var(--line-2); transform: rotate(90deg)}
+
+  @media (max-width: 640px){
+    .modal-head{padding: 24px 22px 18px}
+    .modal-body{padding: 20px 22px}
+    .modal-foot{padding: 16px 22px}
+    .modal-title{font-size: 22px}
+  }
+
+  /* FUTURE / ROADMAP */
+  .future{
+    padding: 88px 0;
+    background: var(--ink);
+    color: var(--bg);
+    margin-top: 60px;
+  }
+  .future .section-head h2{color: var(--bg)}
+  .future .section-head p{color: rgba(250,250,247,.6)}
+  .future-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  @media (max-width: 860px){.future-grid{grid-template-columns: 1fr}}
+  .future-card{
+    background: var(--ink);
+    padding: 36px 32px;
+    transition: background .25s;
+  }
+  .future-card:hover{background: #131313}
+  .future-num{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.14em;
+    margin-bottom: 24px;
+  }
+  .future-title{
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .future-title em{font-style: italic; color: var(--accent); font-weight: 300}
+  .future-desc{
+    font-size: 14.5px;
+    color: rgba(250,250,247,.65);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+  .future-tag{
+    display: inline-block;
+    padding: 4px 11px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 100px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: rgba(250,250,247,.6);
+    text-transform: uppercase;
+  }
+
+  /* CTA / Waitlist */
+  .cta{
+    padding: 100px 0 80px;
+    text-align: center;
+  }
+  .cta-inner{max-width: 640px; margin: 0 auto}
+  .cta h2{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 60px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .cta h2 em{font-style: italic; color: var(--accent); font-weight: 300}
+  .cta p{color: var(--muted); margin-bottom: 28px; font-size: 17px}
+  .waitlist{
+    display:flex; gap:8px;
+    background: var(--bg-elev);
+    border: 1px solid var(--line-2);
+    border-radius: 100px;
+    padding: 6px;
+    max-width: 440px;
+    margin: 0 auto;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .waitlist:focus-within{
+    border-color: var(--ink);
+    box-shadow: 0 0 0 4px rgba(0,0,0,.04);
+  }
+  .waitlist input{
+    flex:1; border: none; outline: none;
+    background: transparent;
+    padding: 0 18px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .waitlist input::placeholder{color: var(--muted-2)}
+  .waitlist button{
+    padding: 12px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background .2s;
+  }
+  .waitlist button:hover{background: var(--accent)}
+  .waitlist-note{
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* FOOTER */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 48px 0 32px;
+    background: var(--bg-elev);
+  }
+  .foot-inner{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .foot-links{display:flex; gap:24px; font-size: 13px; color: var(--muted)}
+  .foot-links a:hover{color: var(--ink)}
+  .foot-copy{font-size: 12.5px; color: var(--muted-2); font-family: var(--mono)}
+
+  /* TOAST */
+  .toast{
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 12px 22px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transition: opacity .25s, transform .25s;
+    pointer-events: none;
+    z-index: 200;
+    display:flex; align-items:center; gap:8px;
+  }
+  .toast.show{opacity: 1; transform: translateX(-50%) translateY(0)}
+
+  /* fade-in */
+  .fade-up{
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp .8s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  .fade-up.d1{animation-delay: .1s}
+  .fade-up.d2{animation-delay: .2s}
+  .fade-up.d3{animation-delay: .3s}
+  .fade-up.d4{animation-delay: .4s}
+  @keyframes fadeUp{
+    to{opacity:1; transform: translateY(0)}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark">P</span>
+      Prompt<em>Dealer</em>
+    </a>
+    <div class="nav-links">
+      <a href="#library">Library</a>
+      <a href="#future">Roadmap</a>
+      <a href="#join">Join</a>
+      <a href="#library" class="nav-cta">Browse prompts</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow fade-up">Curated · Free · Copy & ship</div>
+      <h1 class="hero-title fade-up d1">
+        The library of <em>prompts</em><br/>that actually work.
+      </h1>
+      <p class="hero-sub fade-up d2">
+        A growing collection of battle-tested AI prompts across writing, coding, business, design, marketing, and life. Browse by category, copy, paste, ship.
+      </p>
+      <div class="hero-cta-row fade-up d3">
+        <a href="#library" class="btn-primary">
+          Browse the library
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#future" class="btn-ghost">See what's coming</a>
+      </div>
+      <div class="hero-stats fade-up d4">
+        <div>
+          <div class="stat-num" id="statCount">—</div>
+          <div class="stat-lbl">Prompts</div>
+        </div>
+        <div>
+          <div class="stat-num">8</div>
+          <div class="stat-lbl">Categories</div>
+        </div>
+        <div>
+          <div class="stat-num">∞</div>
+          <div class="stat-lbl">Use cases</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-preview fade-up d2">
+      <div class="preview-card c1">
+        <div class="pv-cat">Writing · Blog</div>
+        <div class="pv-title">SEO blog post outline</div>
+        <div class="pv-snippet">You are an expert content strategist. Create a detailed SEO-optimized outline for a blog post on [TOPIC]. Include H1, H2s, target keywords, search intent, and...</div>
+      </div>
+      <div class="preview-card c2">
+        <div class="pv-cat">Coding · Debug</div>
+        <div class="pv-title">Senior engineer code review</div>
+        <div class="pv-snippet">Act as a senior software engineer reviewing the following code. Identify bugs, performance issues, security concerns, and style violations. For each issue...</div>
+      </div>
+      <div class="preview-card c3">
+        <div class="pv-cat">Business · Strategy</div>
+        <div class="pv-title">SWOT analysis generator</div>
+        <div class="pv-snippet">Conduct a comprehensive SWOT analysis for [COMPANY/PRODUCT] in the [INDUSTRY] space. For each quadrant, provide 4-6 specific, evidence-based points...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">Write better</span>
+    <span class="marquee-item">Ship faster</span>
+    <span class="marquee-item">Think clearer</span>
+    <span class="marquee-item">Sell smarter</span>
+    <span class="marquee-item">Design sharper</span>
+    <span class="marquee-item">Learn deeper</span>
+    <span class="marquee-item">Code cleaner</span>
+    <span class="marquee-item">Plan tighter</span>
+    <!-- duplicate for seamless scroll -->
+    <span class="marquee-item">Write better</span>
+    <span class="marquee-item">Ship faster</span>
+    <span class="marquee-item">Think clearer</span>
+    <span class="marquee-item">Sell smarter</span>
+    <span class="marquee-item">Design sharper</span>
+    <span class="marquee-item">Learn deeper</span>
+    <span class="marquee-item">Code cleaner</span>
+    <span class="marquee-item">Plan tighter</span>
+  </div>
+</div>
+
+<!-- LIBRARY -->
+<section class="library" id="library">
+  <div class="container">
+    <div class="section-head">
+      <h2>The <em>library.</em></h2>
+      <p>Organized by what you're trying to do. Click any prompt to see the full text and copy it.</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" class="search" id="search" placeholder="Search prompts (e.g., 'cold email', 'react hook', 'SWOT')..." />
+      </div>
+      <div class="results-info" id="resultsInfo">— prompts</div>
+    </div>
+
+    <div class="cat-filter" id="catFilter"></div>
+
+    <div id="library-content"></div>
+  </div>
+</section>
+
+<!-- FUTURE / ROADMAP -->
+<section class="future" id="future">
+  <div class="container">
+    <div class="section-head">
+      <h2>What's <em>next.</em></h2>
+      <p>Prompts are just the start. Here's where PromptDealer is heading.</p>
+    </div>
+    <div class="future-grid">
+      <div class="future-card">
+        <div class="future-num">01 / MARKETPLACE</div>
+        <div class="future-title">Become a <em>prompt expert.</em></div>
+        <div class="future-desc">Register your profile, list your specialties, set your rates, and earn from your prompt engineering craft. Reviews, ratings, and verified expertise.</div>
+        <span class="future-tag">Coming soon</span>
+      </div>
+      <div class="future-card">
+        <div class="future-num">02 / HIRE</div>
+        <div class="future-title">Hire an expert <em>on demand.</em></div>
+        <div class="future-desc">Need a custom prompt system for your workflow, agent, or product? Browse vetted experts, post a brief, and get tailored solutions delivered.</div>
+        <span class="future-tag">Coming soon</span>
+      </div>
+      <div class="future-card">
+        <div class="future-num">03 / ACADEMY</div>
+        <div class="future-title">Train. Certify. <em>Level up.</em></div>
+        <div class="future-desc">Structured courses on prompt engineering, model behavior, and AI workflows. Get a recognized PromptDealer certification when you finish.</div>
+        <span class="future-tag">Coming soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / WAITLIST -->
+<section class="cta" id="join">
+  <div class="container cta-inner">
+    <h2>Get the <em>good stuff</em> first.</h2>
+    <p>New prompts weekly. Expert marketplace early access. No spam, ever.</p>
+    <form class="waitlist" id="waitlistForm" onsubmit="return joinWaitlist(event)">
+      <input type="email" id="waitlistEmail" placeholder="you@somewhere.com" required />
+      <button type="submit">Join waitlist</button>
+    </form>
+    <div class="waitlist-note" id="waitlistNote">→ 0 builders waiting</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container foot-inner">
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      Prompt<em>Dealer</em>
+    </div>
+    <div class="foot-links">
+      <a href="#library">Library</a>
+      <a href="#future">Roadmap</a>
+      <a href="#join">Waitlist</a>
+      <a href="mailto:hello@promptdealer.ai">Contact</a>
+    </div>
+    <div class="foot-copy">© 2026 PromptDealer.ai · Made with care</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" onclick="closeModalBackdrop(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="close-btn" onclick="closeModal()" aria-label="Close">×</button>
+    <div class="modal-head">
+      <div class="modal-cat" id="mCat"></div>
+      <div class="modal-title" id="mTitle"></div>
+      <div class="modal-desc" id="mDesc"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-label">The Prompt</div>
+      <div class="prompt-text" id="mPrompt"></div>
+    </div>
+    <div class="modal-foot">
+      <span class="pc-tag" id="mTag"></span>
+      <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        Copy prompt
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastText">Copied to clipboard</span>
+</div>
+
+<script>
+// ===== DATA =====
+const CATEGORIES = [
+  {
+    id: 'writing',
+    name: 'Writing & Content',
+    desc: 'Blog posts, emails, copy, scripts, and everything you publish.',
+    prompts: [
+      {
+        sub: 'Blogging',
+        title: 'SEO blog post outline',
+        desc: 'Generates a complete H1/H2/H3 outline tuned for search intent.',
+        prompt: `You are an expert content strategist and SEO specialist with 10+ years of experience.
+
+Create a comprehensive, SEO-optimized blog post outline for the following topic:
+
+Topic: [INSERT TOPIC]
+Target audience: [INSERT AUDIENCE]
+Primary keyword: [INSERT KEYWORD]
+Tone: [INSERT TONE — e.g., authoritative, conversational, witty]
+
+Deliver:
+1. A magnetic H1 (under 60 chars)
+2. A meta description (under 155 chars)
+3. The dominant search intent (informational / commercial / navigational / transactional) and why
+4. 6–9 H2 sections, each with 2–3 H3 sub-points
+5. 3 internal-linking opportunities
+6. 5 LSI/semantic keywords to weave in naturally
+7. A suggested word count and a clear CTA for the conclusion
+
+Format the response in clean Markdown.`
+      },
+      {
+        sub: 'Email',
+        title: 'High-converting cold email',
+        desc: 'Personalized B2B cold email that reads human, not templated.',
+        prompt: `Act as a top-performing B2B sales copywriter.
+
+Write a cold outreach email with the following inputs:
+
+Sender: [YOUR NAME, COMPANY]
+Recipient: [NAME, TITLE, COMPANY]
+Recipient's likely pain point: [PAIN POINT]
+What you offer: [SOLUTION]
+Specific personalization angle: [SOMETHING REAL — recent funding, hire, blog post, etc.]
+Desired CTA: [REPLY, BOOK A CALL, ETC.]
+
+Rules:
+- Subject line under 7 words, no clickbait
+- Opening sentence references the personalization (no "I hope this finds you well")
+- One clear, single value statement
+- One specific proof point or stat
+- Soft, low-friction CTA
+- Total length: 75–110 words
+- Tone: human, peer-to-peer, zero buzzwords
+
+Also give 2 alternative subject lines.`
+      },
+      {
+        sub: 'Copywriting',
+        title: 'Landing page hero copy',
+        desc: 'Headline, sub-headline, and CTA for a high-conversion hero.',
+        prompt: `You are a world-class direct-response copywriter (think Joanna Wiebe meets David Ogilvy).
+
+Write hero section copy for a landing page:
+
+Product: [WHAT IT DOES]
+Target user: [WHO IT'S FOR]
+Core promise / outcome: [THE TRANSFORMATION]
+Top 3 objections: [LIST]
+Brand voice: [E.G., BOLD, WARM, TECHNICAL]
+
+Output 3 distinct variants. For each:
+- Headline (max 10 words, benefit-driven, specific)
+- Sub-headline (1 sentence, addresses the biggest objection)
+- Primary CTA button text (2–4 words, action-led)
+- Secondary CTA / trust line (e.g., "Free forever · No credit card")
+
+After the variants, briefly explain which one you'd test first and why.`
+      },
+      {
+        sub: 'Storytelling',
+        title: 'Personal narrative framework',
+        desc: 'Turn a raw experience into a publishable, emotional story.',
+        prompt: `Act as a memoir editor and narrative coach.
+
+I'll give you a raw experience. Help me shape it into a compelling 600–800 word personal essay using the Story Spine framework (Once upon a time → Every day → One day → Because of that → Until finally → Ever since).
+
+Raw experience: [DUMP YOUR STORY HERE — bullets are fine]
+The lesson or transformation: [WHAT YOU TOOK FROM IT]
+Target audience / publication: [E.G., MEDIUM, SUBSTACK, LINKEDIN]
+
+Deliver:
+1. A working title and a tagline
+2. The full essay with sensory detail and dialogue
+3. The "turn" — the moment of change — highlighted
+4. 2 alternative opening lines
+5. A 1-sentence pitch I could use to share it`
+      }
+    ]
+  },
+  {
+    id: 'coding',
+    name: 'Coding & Development',
+    desc: 'Debugging, refactoring, architecture, and learning new stacks.',
+    prompts: [
+      {
+        sub: 'Code Review',
+        title: 'Senior engineer code review',
+        desc: 'Get a thorough, opinionated code review with severity ratings.',
+        prompt: `Act as a Staff Software Engineer with 15+ years of experience across [LANGUAGE/STACK].
+
+Review the following code as if it were a pull request from a junior engineer on your team. Be direct but constructive.
+
+\`\`\`[language]
+[PASTE CODE HERE]
+\`\`\`
+
+Context (optional): [WHAT THE CODE IS SUPPOSED TO DO]
+
+For each issue you find, output:
+1. Severity: 🔴 Critical / 🟠 Major / 🟡 Minor / 💡 Nit
+2. Category: Bug / Performance / Security / Readability / Style / Design
+3. Location: line numbers
+4. Explanation: what's wrong and why it matters
+5. Suggested fix: code snippet
+
+End with:
+- Top 3 things done well
+- 1 architectural concern (if any)
+- An overall verdict: Approve / Request changes / Block`
+      },
+      {
+        sub: 'Debugging',
+        title: 'Bug root-cause hunter',
+        desc: 'Systematic debugging when the error message lies.',
+        prompt: `You are a senior debugger. We're going to find the root cause together, not just patch the symptom.
+
+The bug:
+- What's happening: [OBSERVED BEHAVIOR]
+- What should happen: [EXPECTED BEHAVIOR]
+- Error message (if any): [PASTE]
+- Stack trace: [PASTE]
+- Environment: [LANGUAGE, FRAMEWORK, VERSIONS, OS]
+- What I've already tried: [LIST]
+
+Relevant code:
+\`\`\`
+[PASTE]
+\`\`\`
+
+Walk me through:
+1. Your top 3 hypotheses, ranked by likelihood
+2. For each, the cheapest experiment to confirm or eliminate it
+3. The most likely root cause (not just where it crashes — WHY)
+4. The minimal, correct fix
+5. What I should add (tests, logs, guards) to make sure this class of bug can't return
+
+Ask me clarifying questions if anything is ambiguous.`
+      },
+      {
+        sub: 'Refactoring',
+        title: 'Refactor for clarity',
+        desc: 'Clean up messy code without changing behavior.',
+        prompt: `Act as a refactoring expert who values clarity above cleverness.
+
+Refactor the following code to be more readable, maintainable, and idiomatic for [LANGUAGE]. Do not change observable behavior.
+
+\`\`\`
+[PASTE CODE]
+\`\`\`
+
+Apply (where appropriate): meaningful naming, single responsibility, early returns, pure functions, removal of dead code, replacement of magic numbers, and idiomatic patterns for the language.
+
+Deliver:
+1. The refactored code (full file, no ellipses)
+2. A bullet list of every change you made and why
+3. Anything you intentionally did NOT change and the reason
+4. Suggestions for tests that would lock in current behavior before further changes`
+      },
+      {
+        sub: 'Learning',
+        title: 'Explain like I\'m a senior dev',
+        desc: 'Skip the basics — get the mental model and the gotchas.',
+        prompt: `I'm a senior engineer comfortable with [LANGUAGES I KNOW]. I want to understand [NEW CONCEPT / TECH / PATTERN].
+
+Don't give me a beginner tutorial. Give me:
+
+1. The 1-paragraph mental model — what is this really, beneath the marketing?
+2. The problem it was invented to solve (and what people did before it)
+3. A minimal but real code example showing the core idea
+4. The 3 most common gotchas / footguns
+5. When NOT to use it
+6. How it compares to [ALTERNATIVE I ALREADY KNOW]
+7. 2 questions a thoughtful skeptic would still ask`
+      },
+      {
+        sub: 'Architecture',
+        title: 'System design walkthrough',
+        desc: 'Get a senior-level design for a feature or system.',
+        prompt: `Act as a Principal Engineer designing a system on the back of a napkin, then refining it.
+
+The problem:
+- What we're building: [DESCRIBE FEATURE/SYSTEM]
+- Scale: [USERS / RPS / DATA VOLUME]
+- Constraints: [LATENCY, BUDGET, TEAM SIZE, EXISTING STACK]
+- Non-goals: [WHAT WE'RE EXPLICITLY NOT SOLVING]
+
+Walk me through:
+1. The simplest version that could work (be honest if it's an MVP, not "scalable")
+2. The data model (entities, relationships, key indexes)
+3. The API surface (endpoints, contracts, auth)
+4. Where state lives and how it's kept consistent
+5. The 3 biggest risks and how you'd mitigate each
+6. What you'd build first, second, third — and why
+7. What would have to change at 10× scale`
+      }
+    ]
+  },
+  {
+    id: 'business',
+    name: 'Business & Strategy',
+    desc: 'Strategy, analysis, pitches, and the work that moves the org.',
+    prompts: [
+      {
+        sub: 'Analysis',
+        title: 'SWOT analysis generator',
+        desc: 'Comprehensive SWOT with evidence, not generic platitudes.',
+        prompt: `Act as a senior management consultant.
+
+Run a SWOT analysis on:
+Company / Product: [NAME]
+Industry: [INDUSTRY]
+Current context: [RECENT EVENTS, MARKET POSITION]
+Time horizon: [E.G., NEXT 12 MONTHS]
+
+For each quadrant, provide 4–6 points. Each point must include:
+- The point itself (specific, not generic)
+- Evidence or reasoning behind it
+- Strategic implication
+
+After the matrix, give me:
+1. The TOP cross-cutting insight (e.g., a Strength that neutralizes a Threat)
+2. The single most important action this analysis suggests
+3. What additional data would meaningfully sharpen the picture`
+      },
+      {
+        sub: 'Pitching',
+        title: 'Investor pitch one-pager',
+        desc: 'A founder-friendly pitch summary VCs will actually read.',
+        prompt: `Act as a former VC partner who has read 10,000 pitch decks.
+
+Write a one-pager investor pitch for:
+Company: [NAME]
+What we do (in plain English): [DESCRIPTION]
+Stage: [PRE-SEED / SEED / SERIES A]
+Raising: [AMOUNT]
+Target use of funds: [WHAT YOU'LL DO WITH THE MONEY]
+
+Structure:
+1. The hook (1 line — make them want to keep reading)
+2. The problem (1 paragraph — visceral, specific)
+3. The solution (1 paragraph — what makes it 10× not 10%)
+4. Why now (technological / regulatory / cultural shift)
+5. Market (TAM with reasoning, not just a Gartner number)
+6. Traction (numbers > narrative)
+7. Business model (how money is actually made)
+8. Team (why this team will win)
+9. The ask + use of funds + 18-month milestones
+
+Tone: confident, specific, zero buzzwords. Total length: under 500 words.`
+      },
+      {
+        sub: 'Strategy',
+        title: 'Porter\'s Five Forces',
+        desc: 'Classic competitive analysis applied to your business.',
+        prompt: `Apply Porter's Five Forces analysis to:
+
+Business: [NAME / DESCRIPTION]
+Industry: [INDUSTRY]
+Geography: [MARKETS]
+
+For each of the five forces, rate intensity (Low / Moderate / High) and explain:
+
+1. Threat of new entrants
+2. Bargaining power of suppliers
+3. Bargaining power of buyers
+4. Threat of substitutes
+5. Rivalry among existing competitors
+
+For each force, give:
+- The rating
+- 2–3 specific drivers behind that rating
+- How it's likely to evolve in the next 3 years
+- One strategic move the business should make in response
+
+End with: Which force is the single biggest threat to long-term margins, and what's the highest-leverage defense?`
+      },
+      {
+        sub: 'Decisions',
+        title: 'Decision framework facilitator',
+        desc: 'Make a hard decision with structure, not vibes.',
+        prompt: `Act as a decision coach trained in Annie Duke's "Thinking in Bets" and Bezos's two-way-door framework.
+
+The decision I'm facing: [DESCRIBE]
+The options on the table: [LIST]
+What I'm optimizing for: [GOAL]
+Constraints: [TIME, MONEY, REVERSIBILITY]
+
+Walk me through:
+1. Is this a one-way door (hard to reverse) or a two-way door (easy to undo)? Why does that matter here?
+2. For each option, the realistic best case, base case, and worst case
+3. The information I'd need to have 80% confidence — and how I'd cheaply get it
+4. What a 5-year-from-now version of me would likely choose
+5. The cost of NOT deciding by [DEADLINE]
+6. Your recommendation, stated as: "If [ASSUMPTION] holds, choose [OPTION] because [REASON]"`
+      }
+    ]
+  },
+  {
+    id: 'marketing',
+    name: 'Marketing & Sales',
+    desc: 'Campaigns, positioning, social, and pipeline.',
+    prompts: [
+      {
+        sub: 'Positioning',
+        title: 'Positioning statement builder',
+        desc: 'April Dunford-style positioning, not a tagline.',
+        prompt: `Act as a positioning expert inspired by April Dunford's "Obviously Awesome" framework.
+
+Build a positioning statement for:
+Product: [NAME, WHAT IT DOES]
+Current customers: [WHO BUYS IT]
+Best customers (love it most): [WHO GETS HUGE VALUE]
+Alternatives they considered: [COMPETITORS, INCLUDING "DO NOTHING"]
+
+Work through:
+1. Competitive alternatives (what would they use otherwise?)
+2. Unique attributes (what only we have)
+3. Value (the resulting benefit to the customer)
+4. Best-fit customer (who values this most)
+5. Market category (the frame of reference we want to be judged in)
+
+Then write:
+- The full positioning statement (paragraph form)
+- A 1-sentence elevator pitch derived from it
+- 3 concrete ways this positioning should change our homepage today`
+      },
+      {
+        sub: 'Social',
+        title: 'Twitter/X thread architect',
+        desc: 'Hook-first, dopamine-paced thread that gets shared.',
+        prompt: `Act as a creator who has shipped multiple viral threads (10M+ impressions).
+
+Write a Twitter/X thread on:
+Topic: [TOPIC]
+Audience: [WHO IT'S FOR]
+Goal: [INFORM / PERSUADE / BUILD AUDIENCE / DRIVE TRAFFIC]
+Voice: [YOURS — SAMPLE OR DESCRIBE]
+
+Rules:
+- Tweet 1 is the hook: a contrarian or curiosity-inducing claim, max 240 chars, no hashtags
+- 7–12 tweets total
+- Every tweet under 270 chars
+- One idea per tweet — no comma-stuffed monsters
+- Use line breaks for rhythm
+- The second-to-last tweet should be the "aha"
+- The final tweet is a soft CTA (follow / reply with X / link)
+
+Output as numbered tweets. After the thread, give me 2 alternative hooks I could A/B test.`
+      },
+      {
+        sub: 'Ads',
+        title: 'Meta ad creative brief',
+        desc: 'Three concept directions for paid social with hooks.',
+        prompt: `You are a senior performance creative strategist.
+
+Product: [WHAT YOU SELL]
+Audience: [WHO]
+Top pain point: [BIGGEST FRICTION THEY FEEL]
+Top desire: [OUTCOME THEY WANT]
+Offer: [WHAT THE AD IS PROMOTING]
+Format: [STATIC / VIDEO / CAROUSEL]
+
+Give me 3 distinct ad concepts. For each:
+
+1. Concept name (e.g., "Side-by-Side Showdown", "Founder Confession")
+2. The strategic insight it's exploiting
+3. Hook (first 3 seconds for video / headline for static)
+4. Primary text (1–2 short paragraphs, scannable)
+5. CTA button choice + supporting line
+6. Visual direction in 1 paragraph
+7. The metric this concept will likely win on (CTR / hook rate / CVR)
+
+After the 3 concepts, recommend which to ship first and why.`
+      },
+      {
+        sub: 'Email Marketing',
+        title: 'Welcome email sequence',
+        desc: '5-email onboarding flow that builds trust, not just opens.',
+        prompt: `Act as a lifecycle marketer who has built sequences for [B2B/B2C SAAS / ECOM / NEWSLETTER].
+
+Design a 5-email welcome sequence for:
+Product / brand: [NAME]
+Subscriber source: [HOW THEY OPTED IN]
+Goal of sequence: [PRIMARY OUTCOME — first purchase, activation, etc.]
+Brand voice: [DESCRIBE]
+
+For each of the 5 emails, give me:
+- Send timing (e.g., Day 0, Day 2…)
+- Subject line + preview text
+- The single job this email does (don't make it do two)
+- Full email body
+- Primary CTA + secondary CTA (or "none — this email is just for trust")
+- The metric you'd judge it by
+
+After the sequence, give me 2 segmentation rules that would meaningfully improve performance.`
+      }
+    ]
+  },
+  {
+    id: 'design',
+    name: 'Design & Creative',
+    desc: 'UX critiques, brand direction, and creative briefs.',
+    prompts: [
+      {
+        sub: 'UX',
+        title: 'Heuristic UX audit',
+        desc: 'Nielsen-style usability review of a flow or screen.',
+        prompt: `Act as a Senior UX researcher applying Nielsen's 10 usability heuristics plus modern additions (accessibility, performance perception, trust).
+
+I'll describe (or paste a screenshot of) a screen or user flow. Audit it.
+
+Screen / flow context:
+- What it is: [DESCRIBE]
+- The user's goal at this step: [GOAL]
+- Where it sits in the journey: [BEFORE / AFTER]
+
+For each issue you find, output:
+- Heuristic violated (or "trust" / "a11y" / "perceived performance")
+- Severity: 🔴 Critical / 🟠 Major / 🟡 Minor
+- The problem in one sentence
+- Why it hurts the user
+- A concrete fix (not "improve clarity" — specific change)
+
+End with:
+- The top 3 issues to fix this week
+- 1 thing this design does unusually well
+- 1 research question this audit can't answer that you'd recommend testing`
+      },
+      {
+        sub: 'Branding',
+        title: 'Brand voice & tone guide',
+        desc: 'A usable voice doc your whole team can write from.',
+        prompt: `Act as a brand strategist who has written voice guides for category-defining brands.
+
+Build a brand voice and tone guide for:
+Brand: [NAME]
+What we do: [DESCRIPTION]
+Who we serve: [AUDIENCE]
+What we believe (1 line): [POV / MANIFESTO]
+Brands we admire (and why): [LIST]
+Brands we'd never want to sound like: [LIST]
+
+Deliver:
+1. The 4 voice attributes (e.g., "Confident, Curious, Plainspoken, Warm"). For each: a one-line definition + "We are X, but not Y" contrast.
+2. Tone shifts: how voice flexes across (a) marketing site, (b) product UI, (c) support, (d) crisis comms
+3. Vocabulary: 10 words we use, 10 words we never use
+4. 3 before/after rewrites of the same sentence showing the voice in action
+5. A simple "voice check" — 3 questions a writer can ask before publishing`
+      },
+      {
+        sub: 'Creative Brief',
+        title: 'Creative brief for a campaign',
+        desc: 'A brief that briefs — sharp enough to actually guide work.',
+        prompt: `Act as a strategy director at a top creative agency.
+
+Write a creative brief for:
+Brand: [NAME]
+Project: [E.G., LAUNCH CAMPAIGN, RE-BRAND, PRODUCT FILM]
+Business problem (not marketing problem): [WHAT'S BROKEN]
+Budget tier: [SMALL / MID / LARGE]
+Timeline: [DATES]
+
+Structure:
+1. Why are we doing this? (the business reason)
+2. Who are we talking to? (a vivid person, not a demographic)
+3. What do they currently think/feel/do?
+4. What do we need them to think/feel/do instead?
+5. The single most compelling thing we can say
+6. Why should they believe it? (proof points)
+7. Tone & personality
+8. Mandatories (legal, brand, product)
+9. Success measure (one sentence — how we'll know it worked)
+
+Keep it under one page. Be brave: a brief that tries to say everything says nothing.`
+      }
+    ]
+  },
+  {
+    id: 'productivity',
+    name: 'Productivity & Career',
+    desc: 'Planning, learning, performance, and getting ahead at work.',
+    prompts: [
+      {
+        sub: 'Planning',
+        title: 'Weekly review & priority setter',
+        desc: 'A 15-minute Friday review that resets your week.',
+        prompt: `Act as a productivity coach in the tradition of David Allen + Cal Newport.
+
+Walk me through a structured weekly review. I'll answer each section as we go.
+
+Phase 1 — Look back:
+- What did I accomplish this week? (don't be modest)
+- What did I plan to do but didn't?
+- Where did my time actually go vs. where I thought it would go?
+- What gave me energy? What drained me?
+
+Phase 2 — Clear the decks:
+- Open loops still in my head: [I'LL LIST]
+- For each, ask: actionable / not actionable? Next action? Project?
+
+Phase 3 — Look forward:
+- Top 3 outcomes for next week (not tasks — outcomes)
+- For each, the very next physical action
+- What I'll say NO to in order to make room
+- 1 personal / health / relationship priority
+
+End by summarizing my week in a one-paragraph "memo to self" I can re-read on Monday morning.`
+      },
+      {
+        sub: 'Career',
+        title: 'Performance review self-write',
+        desc: 'Translate your year into language that lands with leadership.',
+        prompt: `Act as a seasoned manager who has read 500 performance self-reviews.
+
+Help me write my self-review.
+
+My role: [TITLE, LEVEL]
+The review period: [E.G., LAST 12 MONTHS]
+The company's review framework: [RUBRIC OR VALUES IF YOU HAVE THEM]
+My raw notes / accomplishments / metrics: [DUMP IT ALL HERE]
+
+Translate this into a self-review with:
+1. A 3-sentence executive summary
+2. Top 5 accomplishments — each framed as: situation → action I took → measurable outcome → broader impact
+3. Where I grew (skills, scope, ownership)
+4. Where I fell short, owned honestly, with what I learned
+5. My priorities for the next cycle, tied to team/company goals
+6. Calibration language: 1–2 sentences positioning my year against the next level up
+
+Tone: confident but not bragging, specific, results-led.`
+      },
+      {
+        sub: 'Learning',
+        title: 'Skill acquisition roadmap',
+        desc: 'A focused 30-day plan to get from zero to useful.',
+        prompt: `Act as a learning coach influenced by Josh Kaufman's "First 20 Hours" and Anders Ericsson's deliberate practice research.
+
+I want to learn: [SKILL]
+Why: [GOAL — what I want to be able to DO with it]
+Time available: [HOURS / WEEK]
+Existing background: [PRIOR KNOWLEDGE]
+Target level in 30 days: [SPECIFIC OUTPUT, e.g., "ship a working X"]
+
+Design:
+1. The minimum lovable end state (what "done" looks like in 30 days)
+2. The 5 sub-skills that compound the most — and how to drill each
+3. A week-by-week plan (Week 1–4) with specific exercises, not vague topics
+4. The 3 best resources (be opinionated — pick winners, not a list of 20)
+5. The trap most learners fall into for this skill and how to dodge it
+6. A weekly checkpoint: what should I be able to do by end of Week 1, 2, 3, 4?
+7. The single most valuable project I should build along the way`
+      },
+      {
+        sub: 'Negotiation',
+        title: 'Salary negotiation script',
+        desc: 'A composed, specific script for the conversation.',
+        prompt: `Act as a negotiation coach trained in Chris Voss tactical empathy + Deepak Malhotra principled negotiation.
+
+The situation:
+- Role: [TITLE]
+- Company: [NAME]
+- Current offer: [BASE / EQUITY / BONUS / SIGN-ON]
+- My target: [WHAT I'D LOVE]
+- My walk-away: [WHAT I'D ACCEPT, FLOOR]
+- Competing offer or BATNA: [DETAILS OR "NONE"]
+- What I bring (3 bullets): [VALUE PROPS]
+- My relationship with the hiring manager: [WARM / NEUTRAL / FORMAL]
+
+Build:
+1. The opening line for the negotiation conversation (collaborative, not adversarial)
+2. The specific ask — phrased exactly as I should say it — with the bundle (base + equity + sign-on + start date + title)
+3. 3 responses I'll likely hear and a calm rebuttal for each
+4. The "noble no" — how I'd decline if they hit my floor minus delta
+5. The "yes" — what I'll say if they meet the ask
+6. 1 thing I should NOT say
+7. The closing line that locks the verbal yes and gets it in writing`
+      }
+    ]
+  },
+  {
+    id: 'life',
+    name: 'Life & Wellness',
+    desc: 'Reflection, relationships, health, and clearer thinking.',
+    prompts: [
+      {
+        sub: 'Reflection',
+        title: 'Daily reflection journaling coach',
+        desc: 'A guided 10-minute end-of-day journal.',
+        prompt: `Act as a thoughtful journaling coach. Walk me through a 10-minute end-of-day reflection.
+
+Today's date: [DATE]
+
+Ask me each question, wait for my answer, and respond with a single short follow-up that goes one level deeper before moving on.
+
+1. What's one thing — small or large — that went well today?
+2. What's one thing that frustrated you, and what did it reveal about what you care about?
+3. What's something you noticed about yourself today (not did — noticed)?
+4. Who in your life crossed your mind today, and have you told them?
+5. If tomorrow could go one specific way, what would that look like?
+
+At the end, mirror back to me — in 3 sentences — the throughline of what I shared. No advice unless I ask for it.`
+      },
+      {
+        sub: 'Relationships',
+        title: 'Hard conversation planner',
+        desc: 'Prepare for a conversation you\'ve been avoiding.',
+        prompt: `Act as a communication coach trained in Nonviolent Communication (Marshall Rosenberg) and Crucial Conversations.
+
+I'm preparing for a hard conversation.
+
+Who I'm talking to: [RELATIONSHIP]
+What it's about: [THE SUBJECT]
+What I want them to understand: [CORE MESSAGE]
+What I want from this conversation (outcome): [SPECIFIC]
+What I'm afraid will happen: [HONEST]
+What I might be missing or wrong about: [SELF-CHECK]
+
+Help me prepare:
+1. The story I'm telling myself vs. the facts I actually know
+2. An opening that is honest but not loaded (no "you always…")
+3. The core message in the format: "When [observation], I feel [feeling], because I need [need]. Would you be open to [request]?"
+4. 3 things they might say in response, and a non-defensive reply to each
+5. The line I will NOT cross, no matter how heated it gets
+6. What success looks like — even if they disagree
+
+Tone of preparation: honest, kind, brave.`
+      },
+      {
+        sub: 'Thinking',
+        title: 'Devil\'s advocate for my idea',
+        desc: 'Stress-test your thinking before reality does.',
+        prompt: `Act as the smartest, fairest devil's advocate I could hope to meet. Your job is to stress-test my thinking — not insult it, not flatter it.
+
+My idea / belief / plan: [STATE IT CLEARLY]
+What I'm assuming is true: [LIST ASSUMPTIONS]
+What I'm hoping happens: [DESIRED OUTCOME]
+
+Now:
+1. Steelman my idea first — restate it more strongly than I did, so I trust you understood it
+2. Identify the 3 strongest counter-arguments. Cite mechanisms, not vibes.
+3. For each counter, what evidence would I need to see to update?
+4. Which of my assumptions is the load-bearing one — the one that, if false, collapses the whole thing?
+5. The pre-mortem: it's 12 months from now and the idea failed. What's the most likely story of how?
+6. A version of the idea that addresses the strongest objection without abandoning the core
+7. End with: "If I were you, I would [SPECIFIC ACTION] before committing further."`
+      }
+    ]
+  },
+  {
+    id: 'research',
+    name: 'Research & Learning',
+    desc: 'Reading, synthesis, and turning information into understanding.',
+    prompts: [
+      {
+        sub: 'Summarization',
+        title: 'Deep article summary',
+        desc: 'A summary that captures argument, not just topics.',
+        prompt: `Act as a research analyst who is paid to extract signal from noise.
+
+I will paste an article, paper, or transcript below.
+
+[PASTE CONTENT]
+
+Produce:
+1. A one-sentence "elevator" summary
+2. The author's central thesis, in their voice (use a short direct quote if helpful)
+3. The 3 most important sub-arguments, each with the key evidence
+4. Any data point, framework, or example worth remembering
+5. The strongest counter-argument the author addresses — and how well they handle it
+6. Something the author seems to assume without examining
+7. Three open questions this raised for me
+8. A 2-line "save this if you ever need to think about [TOPIC]" tag
+
+Do not summarize by paragraph order — summarize by importance.`
+      },
+      {
+        sub: 'Literature',
+        title: 'Compare conflicting sources',
+        desc: 'Synthesize disagreeing experts into a clear picture.',
+        prompt: `Act as a research synthesizer.
+
+I have multiple sources giving different — or contradicting — views on the same topic:
+
+Topic: [TOPIC]
+Source A says: [SUMMARY OR PASTE]
+Source B says: [SUMMARY OR PASTE]
+Source C (if any): [SUMMARY OR PASTE]
+My specific question: [WHAT I'M TRYING TO DECIDE / UNDERSTAND]
+
+Walk me through:
+1. The ACTUAL points of disagreement (often less than they appear)
+2. The points where they're really agreeing, just in different language
+3. Which claim is best supported by evidence — and what type of evidence
+4. Where each source's bias / incentive might be pulling them
+5. The synthesis: what a thoughtful person should believe today, with appropriate uncertainty
+6. What new information would meaningfully resolve the disagreement
+7. A 3-sentence answer to my specific question`
+      },
+      {
+        sub: 'Study',
+        title: 'Feynman-style explainer',
+        desc: 'Test (and fill) your understanding by explaining simply.',
+        prompt: `Help me Feynman-test my understanding of [CONCEPT].
+
+Step 1: I'll attempt to explain it as if to a smart 14-year-old.
+Step 2: You identify where my explanation is shaky, hand-wavy, or just wrong.
+Step 3: For each gap, you give me the cleanest possible explanation — and a concrete example.
+Step 4: I re-explain incorporating what I learned.
+Step 5: You quiz me with 3 questions of increasing difficulty.
+
+Be a kind but honest tutor. Do not let me move on if my understanding is fuzzy — even if I sound confident.
+
+Here's my first attempt:
+[YOUR EXPLANATION]`
+      }
+    ]
+  }
+];
+
+// ===== STATE =====
+let activeCategory = 'all';
+let searchTerm = '';
+
+// ===== RENDER =====
+const libraryEl = document.getElementById('library-content');
+const catFilterEl = document.getElementById('catFilter');
+const searchEl = document.getElementById('search');
+const resultsInfoEl = document.getElementById('resultsInfo');
+const statCountEl = document.getElementById('statCount');
+
+function totalPromptCount(){
+  return CATEGORIES.reduce((acc, c) => acc + c.prompts.length, 0);
+}
+
+function renderCategoryFilter(){
+  const total = totalPromptCount();
+  let html = `<button class="cat-pill ${activeCategory==='all'?'active':''}" data-cat="all">All · ${total}</button>`;
+  CATEGORIES.forEach(c => {
+    html += `<button class="cat-pill ${activeCategory===c.id?'active':''}" data-cat="${c.id}">${c.name} · ${c.prompts.length}</button>`;
+  });
+  catFilterEl.innerHTML = html;
+  catFilterEl.querySelectorAll('.cat-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCategory = btn.dataset.cat;
+      renderCategoryFilter();
+      renderLibrary();
+      if(activeCategory !== 'all'){
+        const target = document.getElementById('cat-' + activeCategory);
+        if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+}
+
+function matchesSearch(p, cat){
+  if(!searchTerm) return true;
+  const hay = (p.title + ' ' + p.desc + ' ' + p.sub + ' ' + p.prompt + ' ' + cat.name).toLowerCase();
+  return hay.includes(searchTerm);
+}
+
+function renderLibrary(){
+  let html = '';
+  let shown = 0;
+
+  CATEGORIES.forEach((cat, i) => {
+    if(activeCategory !== 'all' && activeCategory !== cat.id) return;
+    const filtered = cat.prompts.filter(p => matchesSearch(p, cat));
+    if(filtered.length === 0) return;
+    shown += filtered.length;
+
+    html += `
+      <div class="category-block" id="cat-${cat.id}">
+        <div class="category-header">
+          <div class="category-title">
+            <span class="num">${String(i+1).padStart(2,'0')}</span>
+            ${cat.name}
+          </div>
+          <div class="category-desc">${cat.desc}</div>
+        </div>
+        <div class="prompt-grid">
+    `;
+
+    filtered.forEach((p, idx) => {
+      const promptIndex = cat.prompts.indexOf(p);
+      html += `
+        <div class="prompt-card" data-cat="${cat.id}" data-idx="${promptIndex}">
+          <div class="pc-sub">${p.sub}</div>
+          <div class="pc-title">${p.title}</div>
+          <div class="pc-desc">${p.desc}</div>
+          <div class="pc-foot">
+            <span class="pc-tag">${cat.name.split(' ')[0].toLowerCase()}</span>
+            <span class="pc-arrow">→</span>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  });
+
+  if(shown === 0){
+    html = `
+      <div style="text-align:center; padding: 80px 20px; color: var(--muted);">
+        <div style="font-family: var(--serif); font-size: 28px; margin-bottom: 12px; letter-spacing: -0.02em;">No prompts found.</div>
+        <div style="font-size: 15px;">Try a different search or clear filters.</div>
+      </div>
+    `;
+  }
+
+  libraryEl.innerHTML = html;
+  resultsInfoEl.textContent = shown + ' prompt' + (shown === 1 ? '' : 's');
+  statCountEl.textContent = totalPromptCount();
+
+  // bind cards
+  libraryEl.querySelectorAll('.prompt-card').forEach(card => {
+    card.addEventListener('click', () => {
+      openModal(card.dataset.cat, parseInt(card.dataset.idx));
+    });
+  });
+}
+
+// ===== MODAL =====
+const modalEl = document.getElementById('modal');
+const mCat = document.getElementById('mCat');
+const mTitle = document.getElementById('mTitle');
+const mDesc = document.getElementById('mDesc');
+const mPrompt = document.getElementById('mPrompt');
+const mTag = document.getElementById('mTag');
+const copyBtn = document.getElementById('copyBtn');
+let currentPromptText = '';
+
+function openModal(catId, idx){
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const p = cat.prompts[idx];
+  mCat.textContent = cat.name + ' · ' + p.sub;
+  mTitle.textContent = p.title;
+  mDesc.textContent = p.desc;
+  mPrompt.textContent = p.prompt;
+  mTag.textContent = '~' + p.prompt.split(/\s+/).length + ' words';
+  currentPromptText = p.prompt;
+  copyBtn.classList.remove('copied');
+  copyBtn.querySelector('span') || (copyBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copy prompt`);
+  copyBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copy prompt`;
+  modalEl.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  modalEl.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalBackdrop(e){
+  if(e.target.id === 'modal') closeModal();
+}
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && modalEl.classList.contains('open')) closeModal();
+});
+
+function copyPrompt(){
+  navigator.clipboard.writeText(currentPromptText).then(() => {
+    copyBtn.classList.add('copied');
+    copyBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Copied!`;
+    showToast('Prompt copied to clipboard');
+    setTimeout(() => {
+      copyBtn.classList.remove('copied');
+      copyBtn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copy prompt`;
+    }, 2000);
+  }).catch(() => {
+    showToast('Copy failed — please select and copy manually');
+  });
+}
+
+// ===== TOAST =====
+const toastEl = document.getElementById('toast');
+const toastTextEl = document.getElementById('toastText');
+let toastTimer;
+function showToast(msg){
+  toastTextEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+}
+
+// ===== SEARCH =====
+searchEl.addEventListener('input', (e) => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  renderLibrary();
+});
+
+// ===== WAITLIST =====
+let waitlistCount = 0;
+try {
+  const stored = parseInt(localStorage.getItem('pd_waitlist_count') || '0', 10);
+  if(!isNaN(stored)) waitlistCount = stored;
+} catch(e){}
+
+function updateWaitlistNote(){
+  document.getElementById('waitlistNote').textContent = '→ ' + waitlistCount.toLocaleString() + ' builder' + (waitlistCount === 1 ? '' : 's') + ' waiting';
+}
+updateWaitlistNote();
+
+function joinWaitlist(e){
+  e.preventDefault();
+  const email = document.getElementById('waitlistEmail').value.trim();
+  if(!email) return false;
+  // local-only — replace with real endpoint when ready
+  waitlistCount += 1;
+  try { localStorage.setItem('pd_waitlist_count', String(waitlistCount)); } catch(_){}
+  updateWaitlistNote();
+  document.getElementById('waitlistEmail').value = '';
+  showToast('You\'re on the list. Welcome.');
+  return false;
+}
+
+// ===== INITIAL RENDER =====
+renderCategoryFilter();
+renderLibrary();
+</script>
+</body>
+</html>
